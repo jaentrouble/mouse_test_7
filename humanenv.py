@@ -1,7 +1,7 @@
 import gym
 import gym_mouse
 
-env = gym.make('mouseCl-v0')
+env = gym.make('mouseCl-v1')
 env.seed(3)
 env.reset()
 total_reward = 0
