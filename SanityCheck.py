@@ -17,7 +17,7 @@ args = parser.parse_args()
 
 total_steps = int(args.steps)
 
-my_tqdm = tqdm(total=total_steps, ncols=120)
+my_tqdm = tqdm(total=total_steps, dynamic_ncols=True)
 
 if args.sanity_agent :
     from sanityagent import Player
