@@ -45,11 +45,8 @@ class ReplayBuffer():
         self.reward_buffer[self.next_idx] = reward
         self.done_buffer[self.next_idx] = done
         self._update_prior(self.next_idx, self.max_prior)
-        # TODO: Erase after check
-        # saved_idx = self.next_idx
         self.next_idx = (self.next_idx +1) % self.size
         self.num_in_buffer = min(self.size, self.num_in_buffer +1)
-        # return saved_idx
 
     def _to_tree_idx(self, idx):
         """Convert Data idx into tree idx"""
@@ -79,11 +76,6 @@ class ReplayBuffer():
             self.prior_tree[parent_idx] += delta
 
             parent_idx = (parent_idx -1) //2
-    #TODO: Erase after check
-    # def store_effect(self, idx, action, reward, done) :
-    #     self.action_buffer[idx] = action
-    #     self.reward_buffer[idx] = reward
-    #     self.done_buffer[idx] = done
 
     def _get_idx_from_s(self, s):
         """Get tree index from sampled s value"""

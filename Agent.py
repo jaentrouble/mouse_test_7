@@ -12,6 +12,7 @@ import numpy as np
 from agent_assets.replaybuffer import ReplayBuffer
 from agent_assets.mousemodel import QModel
 import pickle
+from tqdm import tqdm
 
 #leave memory space for opencl
 gpus=tf.config.experimental.list_physical_devices('GPU')
@@ -27,7 +28,7 @@ else :
 mixed_precision.set_policy(policy)
 
 class Player():
-    def __init__(self, observation_space, action_space, m_dir=None,
+    def __init__(self, observation_space, action_space, tqdm, m_dir=None,
                  log_name=None, start_step=0, start_round=0,load_buffer=False):
         """
         model : The actual training model
@@ -38,6 +39,7 @@ class Player():
         print('Starting from step {}'.format(start_step))
         print('Starting from round {}'.format(start_round))
         print('Load buffer? {}'.format(load_buffer))
+        self.tqdm = tqdm
         self.action_n = action_space.n
         self.observation_space = observation_space
         #Inputs
@@ -166,9 +168,6 @@ class Player():
             return random.choice(indices)
 
     def act(self, before_state):
-        #TODO: Erase after check
-        # if training :
-        #     self.buf_idx = self.buffer.store_obs(before_state)
         q = self._tf_q(before_state)
         action = self.choose_action(q.numpy())
         tf.summary.scalar('maxQ', tf.math.reduce_max(q), self.total_steps)
@@ -207,6 +206,7 @@ class Player():
 
     def step(self, before, action, reward, done, info):
         self.buffer.store_step(before, action, reward, done)
+        self.tqdm.update()
         # Record here, so that it won't record when evaluating
         if info['ate_apple']:
             self.score += 1
@@ -216,20 +216,28 @@ class Player():
             tf.summary.scalar('Reward', self.cumreward, self.rounds)
             tf.summary.scalar('Score_step', self.score, self.total_steps)
             tf.summary.scalar('Reward_step', self.cumreward, self.total_steps)
-            print('\n{0} round({1} steps) || Score: {2} | Reward: {3:.1f}'.format(
-                self.rounds, self.current_steps, self.score, self.cumreward
-            ))
+            info_dict = {
+                'Round':self.rounds,
+                'Steps':self.current_steps,
+                'Score':self.score,
+                'Reward':self.cumreward,
+            }
+            self.tqdm.set_postfix(info_dict)
             self.score = 0
             self.current_steps = 0
             self.cumreward = 0
             self.rounds += 1
 
         if self.buffer.num_in_buffer < hp.Learn_start :
-            if self.buffer.num_in_buffer % 100 == 0:
-                print('filling buffer {0}/{1}'.format(
-                        self.buffer.num_in_buffer, hp.Learn_start))
+            self.tqdm.set_description(
+                f'filling buffer'
+                f'{self.buffer.num_in_buffer}/{hp.Learn_start}'
+            )
 
         else :
+            if self.start_training == False:
+                self.tqdm.set_description()
+                self.start_training = True
             s_batch, a_batch, r_batch, d_batch, sp_batch, indices, weights = \
                                     self.buffer.sample(hp.Batch_size)
             s_batch = self.pre_processing(s_batch)
@@ -258,7 +266,7 @@ class Player():
 
     def save_model(self):
         """
-        Return next save file number
+        Saves the model and return next save file number
         """
         self.save_count += 1
         if not path.exists(self.save_dir):

@@ -3,7 +3,7 @@ import gym
 import gym_mouse
 import numpy as np
 import agent_assets.A_hparameters as hp
-from tqdm import trange
+from tqdm import tqdm
 import argparse
 import os
 import sys
@@ -14,6 +14,10 @@ parser.add_argument('-sa', dest='sanity_agent', action='store_true',default=Fals
 parser.add_argument('--steps', dest='steps')
 parser.add_argument('--logname', dest='log_name', default=None)
 args = parser.parse_args()
+
+total_steps = int(args.steps)
+
+my_tqdm = tqdm(total=total_steps, ncols=120)
 
 if args.sanity_agent :
     from sanityagent import Player
@@ -30,7 +34,7 @@ hp.epsilon_nstep = 500
 
 original_env = gym.make('mouseCl-v1')
 test_env = EnvTest(original_env.observation_space)
-player = Player(original_env.observation_space, test_env.action_space,
+player = Player(original_env.observation_space, test_env.action_space, my_tqdm,
                 log_name=args.log_name)
 bef_o = test_env.reset()
 # for step in trange(1000) :
@@ -50,7 +54,7 @@ bef_o = test_env.reset()
 #     if d :
 #         o = test_env.reset()
 if args.profile:
-    for step in trange(hp.Learn_start+50, ncols=100):
+    for step in range(hp.Learn_start+50):
         action = player.act(bef_o)
         aft_o, r, d, i = test_env.step(action)
         player.step(bef_o,action,r,d,i)
@@ -59,7 +63,7 @@ if args.profile:
         else :
             bef_o = aft_o
     with tf.profiler.experimental.Profile('log/profile'):
-        for step in trange(5, ncols=100):
+        for step in range(5):
             action = player.act(bef_o)
             aft_o, r, d, i = test_env.step(action)
             player.step(bef_o,action,r,d,i)
@@ -69,7 +73,7 @@ if args.profile:
                 bef_o = aft_o
 
 else :
-    for step in trange(int(args.steps), ncols=100):
+    for step in range(int(args.steps)):
         action = player.act(bef_o)
         aft_o, r, d, i = test_env.step(action)
         player.step(bef_o, action,r,d,i)
@@ -91,3 +95,4 @@ else :
         #             vo = test_env.reset()
         #     print(rewards/10)
         #     input('continue?')
+my_tqdm.close()

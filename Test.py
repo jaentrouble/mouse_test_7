@@ -4,7 +4,7 @@ import time
 import numpy as np
 from Agent import Player
 import agent_assets.A_hparameters as hp
-from tqdm import trange
+from tqdm import tqdm
 import argparse
 import os
 import sys
@@ -29,6 +29,8 @@ cur_loop = int(args.cur_loop)
 cur_r = int(args.cur_r)
 load_buffer = args.load_buffer
 
+my_tqdm = tqdm(total=total_steps, ncols=80)
+
 print('starting loop, {} loops left'.format(total_loop))
 if not args.vm :
     from gym.envs.classic_control.rendering import SimpleImageViewer
@@ -39,16 +41,17 @@ st = time.time()
 env = gym.make(ENVIRONMENT)
 bef_o = env.reset()
 if args.load :
-    player = Player(env.observation_space, env.action_space,
+    player = Player(env.observation_space, env.action_space, my_tqdm,
                 args.load, args.log_name, cur_loop*total_steps, cur_r, load_buffer)
 elif args.log_name:
     # If log directory is explicitely selected
-    player = Player(env.observation_space, env.action_space, log_name=args.log_name)
+    player = Player(env.observation_space, env.action_space, my_tqdm, 
+                log_name=args.log_name)
 else :
-    player = Player(env.observation_space, env.action_space)
+    player = Player(env.observation_space, env.action_space, my_tqdm)
 if not args.vm :
     env.render()
-for step in trange(total_steps, ncols=80):
+for step in range(total_steps):
     action = player.act(bef_o)
     aft_o,r,d,i = env.step(action)
     player.step(bef_o,action,r,d,i)
@@ -58,6 +61,8 @@ for step in trange(total_steps, ncols=80):
         bef_o = aft_o
     if not args.vm :
         env.render()
+
+my_tqdm.close()
 
 next_save = player.save_model()
 if not args.load:
