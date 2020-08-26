@@ -29,7 +29,7 @@ cur_loop = int(args.cur_loop)
 cur_r = int(args.cur_r)
 load_buffer = args.load_buffer
 
-my_tqdm = tqdm(total=total_steps, ncols=80)
+my_tqdm = tqdm(total=total_steps, dynamic_ncols=True)
 
 print('starting loop, {} loops left'.format(total_loop))
 if not args.vm :
