@@ -11,6 +11,7 @@ import tensorflow as tf
 parser = argparse.ArgumentParser()
 parser.add_argument('-pf', dest='profile', action='store_true', default=False)
 parser.add_argument('-sa', dest='sanity_agent', action='store_true',default=False)
+parser.add_argument('--steps', dest='steps')
 parser.add_argument('--logname', dest='log_name', default=None)
 args = parser.parse_args()
 
@@ -31,7 +32,7 @@ original_env = gym.make('mouseCl-v1')
 test_env = EnvTest(original_env.observation_space)
 player = Player(original_env.observation_space, test_env.action_space,
                 log_name=args.log_name)
-o = test_env.reset()
+bef_o = test_env.reset()
 # for step in trange(1000) :
 #     player.act(o,training=True)
 #     if step%5 == 0 :
@@ -50,26 +51,32 @@ o = test_env.reset()
 #         o = test_env.reset()
 if args.profile:
     for step in trange(hp.Learn_start+50, ncols=100):
-        action = player.act(o, training=True)
-        o, r, d, i = test_env.step(action)
-        player.step(action,r,d,i)
+        action = player.act(bef_o)
+        aft_o, r, d, i = test_env.step(action)
+        player.step(bef_o,action,r,d,i)
         if d :
-            o = test_env.reset()
+            bef_o = test_env.reset()
+        else :
+            bef_o = aft_o
     with tf.profiler.experimental.Profile('log/profile'):
         for step in trange(5, ncols=100):
-            action = player.act(o, training=True)
-            o, r, d, i = test_env.step(action)
-            player.step(action,r,d,i)
+            action = player.act(bef_o)
+            aft_o, r, d, i = test_env.step(action)
+            player.step(bef_o,action,r,d,i)
             if d :
-                o = test_env.reset()
+                bef_o = test_env.reset()
+            else :
+                bef_o = aft_o
 
 else :
-    for step in trange(10000, ncols=100):
-        action = player.act(o, training=True)
-        o, r, d, i = test_env.step(action)
-        player.step(action,r,d,i)
+    for step in trange(int(args.steps), ncols=100):
+        action = player.act(bef_o)
+        aft_o, r, d, i = test_env.step(action)
+        player.step(bef_o, action,r,d,i)
         if d :
-            o = test_env.reset()
+            bef_o = test_env.reset()
+        else :
+            bef_o = aft_o
         # if step % 1000 == 0 :
         #     print('Evaluating')
         #     vo = test_env.reset()

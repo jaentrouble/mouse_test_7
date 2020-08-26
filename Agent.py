@@ -165,9 +165,10 @@ class Player():
             indices = [i for i, x in enumerate(q[0]) if x==m]
             return random.choice(indices)
 
-    def act(self, before_state, training:bool):
-        if training :
-            self.buf_idx = self.buffer.store_obs(before_state)
+    def act(self, before_state):
+        #TODO: Erase after check
+        # if training :
+        #     self.buf_idx = self.buffer.store_obs(before_state)
         q = self._tf_q(before_state)
         action = self.choose_action(q.numpy())
         tf.summary.scalar('maxQ', tf.math.reduce_max(q), self.total_steps)
@@ -181,7 +182,7 @@ class Player():
         return q
 
     @tf.function
-    def train_step(self, o, r, d, a, sp_batch, total_step):
+    def train_step(self, o, r, d, a, sp_batch, total_step, weights):
         target_q = self.t_model(sp_batch, training=False)
         q_samp = r + tf.cast(tm.logical_not(d), tf.float32) * \
                      hp.Q_discount * \
@@ -190,18 +191,22 @@ class Player():
         with tf.GradientTape() as tape:
             q = self.model(o, training=True)
             q_sa = tf.math.reduce_sum(q*mask, axis=1)
-            loss = keras.losses.MSE(q_samp, q_sa)
+            # loss = keras.losses.MSE(q_samp, q_sa)
+            unweighted_loss = tf.math.square(q_samp - q_sa)
+            loss = tf.math.reduce_mean(weights * unweighted_loss)
             tf.summary.scalar('Loss', loss, total_step)
             scaled_loss = self.model.optimizer.get_scaled_loss(loss)
 
+        priority = (tf.math.abs(q_samp - q_sa) + hp.Buf.epsilon)**hp.Buf.alpha
         trainable_vars = self.model.trainable_variables
         scaled_gradients = tape.gradient(scaled_loss, trainable_vars)
         gradients = self.model.optimizer.get_unscaled_gradients(scaled_gradients)
         self.model.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        return priority
 
 
-    def step(self, action, reward, done, info):
-        self.buffer.store_effect(self.buf_idx, action, reward, done)
+    def step(self, before, action, reward, done, info):
+        self.buffer.store_step(before, action, reward, done)
         # Record here, so that it won't record when evaluating
         if info['ate_apple']:
             self.score += 1
@@ -225,13 +230,25 @@ class Player():
                         self.buffer.num_in_buffer, hp.Learn_start))
 
         else :
-            s_batch, a_batch, r_batch, d_batch, sp_batch = self.buffer.sample(
-                                                                hp.Batch_size)
+            s_batch, a_batch, r_batch, d_batch, sp_batch, indices, weights = \
+                                    self.buffer.sample(hp.Batch_size)
             s_batch = self.pre_processing(s_batch)
             sp_batch = self.pre_processing(sp_batch)
             tf_total_steps = tf.constant(self.total_steps, dtype=tf.int64)
-            data = (s_batch, r_batch, d_batch, a_batch, sp_batch, tf_total_steps)
-            self.train_step(*data)
+            weights = tf.convert_to_tensor(weights, dtype=tf.float32)
+
+            data = (
+                s_batch,
+                r_batch, 
+                d_batch, 
+                a_batch, 
+                sp_batch, 
+                tf_total_steps,
+                weights,
+            )
+
+            new_priors = self.train_step(*data).numpy()
+            self.buffer.update_prior_batch(indices, new_priors)
 
             if not self.total_steps % hp.Target_update:
                 self.t_model.set_weights(self.model.get_weights())
@@ -277,7 +294,7 @@ class Player():
             loop += 1
             if not loop % 100:
                 print('Eval : {}step passed'.format(loop))
-            a = self.act(o, training=False)
+            a = self.act(o)
             o,r,done,i = env.step(a)
             if i['ate_apple']:
                 score += 1

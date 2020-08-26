@@ -37,7 +37,7 @@ if not args.vm :
 # For benchmark
 st = time.time()
 env = gym.make(ENVIRONMENT)
-o = env.reset()
+bef_o = env.reset()
 if args.load :
     player = Player(env.observation_space, env.action_space,
                 args.load, args.log_name, cur_loop*total_steps, cur_r, load_buffer)
@@ -49,11 +49,13 @@ else :
 if not args.vm :
     env.render()
 for step in trange(total_steps, ncols=80):
-    action = player.act(o, training=True)
-    o,r,d,i = env.step(action)
-    player.step(action,r,d,i)
+    action = player.act(bef_o)
+    aft_o,r,d,i = env.step(action)
+    player.step(bef_o,action,r,d,i)
     if d :
-        o = env.reset()
+        bef_o = env.reset()
+    else:
+        bef_o = aft_o
     if not args.vm :
         env.render()
 

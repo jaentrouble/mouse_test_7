@@ -8,4 +8,9 @@ epsilon_nstep = 500000
 Q_discount = 0.99
 Train_epoch = 1
 
+class Buf():
+    alpha = 0.6
+    beta = 0.4
+    epsilon = 1e-3
+
 Model_save = 100000
