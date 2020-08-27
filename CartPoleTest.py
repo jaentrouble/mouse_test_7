@@ -11,7 +11,7 @@ import sys
 ## Select Player
 from CartPoleAgent import Player
 hp.Learn_start = 1000
-hp.Target_update = 2000
+hp.Target_update = 10000
 
 ENVIRONMENT = 'CartPole-v1'
 
@@ -68,36 +68,36 @@ for step in range(total_steps):
 
 my_tqdm.close()
 
-next_save = player.save_model()
-if not args.load:
-    save_dir = player.save_dir
-else:
-    save_dir, _ = os.path.split(args.load)
-next_dir = os.path.join(save_dir,str(next_save))
+# next_save = player.save_model()
+# if not args.load:
+#     save_dir = player.save_dir
+# else:
+#     save_dir, _ = os.path.split(args.load)
+# next_dir = os.path.join(save_dir,str(next_save))
 # score = player.evaluate(gym.make(ENVIRONMENT), vid_type)
 # print('eval_score:{0}'.format(score))
 # print('{0}steps took {1} sec'.format(total_steps,time.time()-st))
 
-total_loop -= 1
-if total_loop <= 0 :
-    sys.exit()
-else :
-    next_args = []
-    next_args.append('python')
-    next_args.append(__file__)
-    next_args.append('-v')
-    next_args.append('-l')
-    next_args.append(next_dir)
-    next_args.append('--step')
-    next_args.append(str(total_steps))
-    next_args.append('--loop')
-    next_args.append(str(total_loop))
-    next_args.append('--curloop')
-    next_args.append(str(cur_loop+1))
-    next_args.append('--logname')
-    next_args.append(player.log_name)
-    next_args.append('--curround')
-    next_args.append(str(player.rounds))
-    next_args.append('-lb')
+# total_loop -= 1
+# if total_loop <= 0 :
+#     sys.exit()
+# else :
+#     next_args = []
+#     next_args.append('python')
+#     next_args.append(__file__)
+#     next_args.append('-v')
+#     next_args.append('-l')
+#     next_args.append(next_dir)
+#     next_args.append('--step')
+#     next_args.append(str(total_steps))
+#     next_args.append('--loop')
+#     next_args.append(str(total_loop))
+#     next_args.append('--curloop')
+#     next_args.append(str(cur_loop+1))
+#     next_args.append('--logname')
+#     next_args.append(player.log_name)
+#     next_args.append('--curround')
+#     next_args.append(str(player.rounds))
+#     next_args.append('-lb')
     
-    os.execv(sys.executable, next_args)
+#     os.execv(sys.executable, next_args)

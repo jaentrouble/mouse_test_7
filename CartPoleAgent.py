@@ -51,12 +51,12 @@ class Player():
             # Build models
             self.model = keras.Model(inputs=[obs_input],
                                 outputs=outputs)
-            # lr = keras.optimizers.schedules.ExponentialDecay(
-            #     initial_learning_rate=0.05, 
-            #     decay_steps=100,
-            #     decay_rate=0.99
-            # )
-            optimizer = keras.optimizers.Adam()
+            lr = keras.optimizers.schedules.ExponentialDecay(
+                initial_learning_rate=0.01, 
+                decay_steps=1000,
+                decay_rate=0.95
+            )
+            optimizer = keras.optimizers.Adam(learning_rate=lr)
             optimizer = mixed_precision.LossScaleOptimizer(optimizer,
                                                         loss_scale='dynamic')
             self.model.compile(optimizer=optimizer)
@@ -120,8 +120,8 @@ class Player():
 
     def brain_layers(self, x):
         x = layers.Flatten()(x)
+        x = layers.Dense(512, activation='relu')(x)
         x = layers.Dense(256, activation='relu')(x)
-        x = layers.Dense(128, activation='relu')(x)
         outputs = layers.Dense(self.action_n)(x)
         return outputs
 
