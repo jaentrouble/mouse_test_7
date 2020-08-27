@@ -44,24 +44,12 @@ class Player():
         self.observation_space = observation_space
         #Inputs
         if m_dir is None :
-            left_input = keras.Input(observation_space['Left'].shape,
-                                    name='Left')
-            right_input = keras.Input(observation_space['Right'].shape,
-                                    name='Right')
-            # Spare eye model for later use
-            left_input_shape = observation_space['Left'].shape
-            right_input_shape = observation_space['Right'].shape
-            left_eye_model = self.eye_model(left_input_shape,'Left')
-            right_eye_model = self.eye_model(right_input_shape,'Right')
-            # Get outputs of the model
-            left_encoded = left_eye_model(left_input)
-            right_encoded = right_eye_model(right_input)
-            # Concatenate both eye's inputs
-            concat = layers.Concatenate()([left_encoded,right_encoded])
-            outputs = self.brain_layers(concat)
+            obs_input = keras.Input(observation_space['obs'].shape,
+                                    name='obs')
+            outputs = self.brain_layers(obs_input)
             outputs = layers.Activation('linear',dtype='float32')(outputs)
             # Build models
-            self.model = keras.Model(inputs=[left_input, right_input],
+            self.model = keras.Model(inputs=[obs_input],
                                 outputs=outputs)
             optimizer = keras.optimizers.Adam()
             optimizer = mixed_precision.LossScaleOptimizer(optimizer,
@@ -111,19 +99,19 @@ class Player():
             self.save_dir, self.save_count = path.split(m_dir)
             self.save_count = int(self.save_count)
 
-    def eye_model(self, input_shape, left_or_right):
-        """
-        Return an eye model
-        """
-        inputs = layers.Input(input_shape)
-        x = layers.Reshape((inputs.shape[1],
-                            inputs.shape[2]*inputs.shape[3]))(inputs)
-        x = layers.Conv1D(64, 7, strides=1, activation='relu')(x)
-        x = layers.Conv1D(128, 5, strides=2, activation='relu')(x)
-        x = layers.Conv1D(192, 3, strides=2, activation='relu')(x)
-        outputs = layers.Conv1D(256, 3, strides=2, activation='relu')(x)
-        return keras.Model(inputs=inputs, outputs=outputs, 
-                    name=left_or_right+'_eye')
+    # def eye_model(self, input_shape, left_or_right):
+    #     """
+    #     Return an eye model
+    #     """
+    #     inputs = layers.Input(input_shape)
+    #     x = layers.Reshape((inputs.shape[1],
+    #                         inputs.shape[2]*inputs.shape[3]))(inputs)
+    #     x = layers.Conv1D(64, 7, strides=1, activation='relu')(x)
+    #     x = layers.Conv1D(128, 5, strides=2, activation='relu')(x)
+    #     x = layers.Conv1D(192, 3, strides=2, activation='relu')(x)
+    #     outputs = layers.Conv1D(256, 3, strides=2, activation='relu')(x)
+    #     return keras.Model(inputs=inputs, outputs=outputs, 
+    #                 name=left_or_right+'_eye')
 
     def brain_layers(self, x):
         x = layers.Flatten()(x)
@@ -147,13 +135,13 @@ class Player():
         Preprocess input data
         """
         processed_obs = {}
-        if len(observation['Right'].shape)==\
-            len(self.observation_space['Right'].shape):
+        if len(observation['obs'].shape)==\
+            len(self.observation_space['obs'].shape):
             for name, obs in observation.items():
-                processed_obs[name] = tf.cast(obs[np.newaxis,...],tf.float32)/255
+                processed_obs[name] = tf.cast(obs[np.newaxis,...],tf.float32)
         else :
             for name, obs in observation.items():
-                processed_obs[name] = tf.cast(obs, tf.float32)/255
+                processed_obs[name] = tf.cast(obs, tf.float32)
         return processed_obs
 
     def choose_action(self, q):
@@ -208,18 +196,13 @@ class Player():
         self.buffer.store_step(before, action, reward, done)
         self.tqdm.update()
         # Record here, so that it won't record when evaluating
-        if info['ate_apple']:
-            self.score += 1
         self.cumreward += reward
         if done:
-            tf.summary.scalar('Score', self.score, self.rounds)
             tf.summary.scalar('Reward', self.cumreward, self.rounds)
-            tf.summary.scalar('Score_step', self.score, self.total_steps)
             tf.summary.scalar('Reward_step', self.cumreward, self.total_steps)
             info_dict = {
                 'Round':self.rounds,
                 'Steps':self.current_steps,
-                'Score':self.score,
                 'Reward':self.cumreward,
             }
             self.tqdm.set_postfix(info_dict)
