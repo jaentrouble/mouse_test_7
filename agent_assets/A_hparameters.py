@@ -17,3 +17,5 @@ class Buf():
     epsilon = 1e-3
 
 Model_save = 100000
+
+histogram = 100000

@@ -20,12 +20,12 @@ for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu,True)
 
 keras.backend.clear_session()
-if len(gpus)>0:
-    policy = mixed_precision.Policy('mixed_float16')
-    print('policy = mixed_float16')
-else : 
-    policy = mixed_precision.Policy('float32')
-mixed_precision.set_policy(policy)
+# if len(gpus)>0:
+#     policy = mixed_precision.Policy('mixed_float16')
+#     print('policy = mixed_float16')
+# else : 
+#     policy = mixed_precision.Policy('float32')
+# mixed_precision.set_policy(policy)
 
 class Player():
     def __init__(self, observation_space, action_space, tqdm, m_dir=None,
@@ -234,6 +234,10 @@ class Player():
             self.current_steps = 0
             self.cumreward = 0
             self.rounds += 1
+
+        if self.total_steps % hp.histogram == 0:
+            for var in self.model.trainable_weights:
+                tf.summary.histogram(var.name, var, step=self.total_steps)
 
         if self.buffer.num_in_buffer < hp.Learn_start :
             self.tqdm.set_description(
