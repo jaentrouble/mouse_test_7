@@ -105,7 +105,7 @@ class Player():
         # Savefile folder directory
         if m_dir is None :
             self.save_dir = path.join('savefiles',
-                            datetime.now().strftime('%m_%d_%H_%M_%S'))
+                            self.log_name)
             self.save_count = 0
         else:
             self.save_dir, self.save_count = path.split(m_dir)
