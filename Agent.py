@@ -63,7 +63,7 @@ class Player():
             # Build models
             self.model = keras.Model(inputs=[left_input, right_input],
                                 outputs=outputs)
-            optimizer = keras.optimizers.Adam()
+            optimizer = keras.optimizers.Adam(learning_rate=self._lr)
             optimizer = mixed_precision.LossScaleOptimizer(optimizer,
                                                         loss_scale='dynamic')
             self.model.compile(optimizer=optimizer)
@@ -132,6 +132,13 @@ class Player():
         x = layers.Dense(64, activation='relu')(x)
         outputs = layers.Dense(self.action_n)(x)
         return outputs
+
+    def _lr(self):
+        if self.total_steps > hp.lr_nsteps:
+            return hp.lr_end
+        else:
+             return hp.lr_start*\
+                 ((hp.lr_start/hp.lr_end)**(self.total_steps/hp.lr_nsteps))
 
     @property
     def epsilon(self):

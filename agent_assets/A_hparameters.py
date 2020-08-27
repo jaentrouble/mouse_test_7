@@ -7,6 +7,9 @@ epsilon_min = 0.001
 epsilon_nstep = 500000
 Q_discount = 0.99
 Train_epoch = 1
+lr_start = 0.001
+lr_end = 0.00005
+lr_nsteps = 2000000
 
 class Buf():
     alpha = 0.6
