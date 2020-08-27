@@ -16,7 +16,7 @@ class ReplayBuffer():
         for name, space in observation_space.spaces.items():
             shape = space.shape
             self.obs_buffer[name] = np.zeros([buffer_size]+list(shape),
-                                            dtype=np.uint8)
+                                            dtype=space.dtype)
         self.action_buffer = np.zeros(buffer_size, dtype=np.int32)
         self.reward_buffer = np.zeros(buffer_size, dtype=np.float32)
         self.done_buffer = np.zeros(buffer_size, dtype=np.bool)

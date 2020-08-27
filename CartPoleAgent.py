@@ -56,7 +56,7 @@ class Player():
             #     decay_steps=100,
             #     decay_rate=0.99
             # )
-            optimizer = keras.optimizers.Adam(learning_rate=1e-3)
+            optimizer = keras.optimizers.Adam()
             optimizer = mixed_precision.LossScaleOptimizer(optimizer,
                                                         loss_scale='dynamic')
             self.model.compile(optimizer=optimizer)
@@ -120,9 +120,8 @@ class Player():
 
     def brain_layers(self, x):
         x = layers.Flatten()(x)
+        x = layers.Dense(256, activation='relu')(x)
         x = layers.Dense(128, activation='relu')(x)
-        x = layers.Dense(512, activation='relu')(x)
-        x = layers.Dense(512, activation='relu')(x)
         outputs = layers.Dense(self.action_n)(x)
         return outputs
 
@@ -143,10 +142,10 @@ class Player():
         if len(observation['obs'].shape)==\
             len(self.observation_space['obs'].shape):
             for name, obs in observation.items():
-                processed_obs[name] = tf.cast(obs[np.newaxis,...],tf.float32)/10
+                processed_obs[name] = tf.cast(obs[np.newaxis,...],tf.float32)
         else :
             for name, obs in observation.items():
-                processed_obs[name] = tf.cast(obs, tf.float32)/10
+                processed_obs[name] = tf.cast(obs, tf.float32)
         return processed_obs
 
     def choose_action(self, q):

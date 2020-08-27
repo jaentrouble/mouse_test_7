@@ -21,7 +21,7 @@ my_tqdm = tqdm(total=total_steps, dynamic_ncols=True)
 
 from CartPoleAgent import Player
 
-hp.Buffer_size = 500
+hp.Buffer_size = 1000
 hp.Learn_start = 200
 hp.Batch_size = 32
 hp.Target_update = 500
