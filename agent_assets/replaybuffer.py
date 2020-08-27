@@ -102,7 +102,6 @@ class ReplayBuffer():
         return sampled_i
 
     def sample(self, batch_size):
-        # indices = np.array(random.sample(range(self.num_in_buffer-1),batch_size))
         indices = self._to_data_idx(self._sample_indices(batch_size))
         next_indices = (indices + 1) % self.size
         obs_sample = {}
