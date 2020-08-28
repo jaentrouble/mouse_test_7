@@ -20,6 +20,7 @@ parser.add_argument('--curloop', dest='cur_loop',default=0)
 parser.add_argument('--logname', dest='log_name',default=False)
 parser.add_argument('--curround', dest='cur_r',default=0)
 parser.add_argument('-lb', dest='load_buffer',action='store_true',default=False)
+# parser.add_argument('-pf', dest='profile',action='store_true',default=False)
 args = parser.parse_args()
 
 vid_type = 'mp4'
