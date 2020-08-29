@@ -12,6 +12,9 @@ import sys
 from CartPoleAgent import Player
 hp.Learn_start = 1000
 hp.Target_update = 2000
+hp.lr_start = 0.01
+hp.lr_end = 0.001
+hp.lr_nsteps = 500000
 
 ENVIRONMENT = 'CartPole-v1'
 
