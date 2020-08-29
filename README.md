@@ -30,7 +30,7 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 ### Sanity check
 
-1. Sanity check environment
+1. **Sanity check environment**
 
 >![image](https://user-images.githubusercontent.com/45917844/91637321-a0847d80-ea42-11ea-9e67-c8e2db18b65c.png)
 
@@ -38,9 +38,9 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 >![image](https://user-images.githubusercontent.com/45917844/91637333-ae3a0300-ea42-11ea-967e-3436fa67f4ed.png)
 
-  - Passed
+- Passed
 
-2. Another Sanity check with shaped rewards (0.1 for getting close, -0.2 for getting farther away)
+2. **Another Sanity check with shaped rewards (0.1 for getting close, -0.2 for getting farther away)**
 
 >![image](https://user-images.githubusercontent.com/45917844/91637370-e5a8af80-ea42-11ea-9117-26097712332c.png)
 
@@ -52,7 +52,7 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 ### Main test
 
-1. Test 1
+1. **Test 1**
 
 >![image](https://user-images.githubusercontent.com/45917844/91637538-3076f700-ea44-11ea-8c01-bc6c1b75219a.png)
 
@@ -62,10 +62,10 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 >![image](https://user-images.githubusercontent.com/45917844/91637547-408ed680-ea44-11ea-9a3f-0026c8b38a63.png)
 
-    - NaN error appeared
-      - Using mixed_precision does not enhance speed here anyway (Memory Bottleneck), so disabled mixed_precision (Test 2)
+- NaN error appeared
+  - Using mixed_precision does not enhance speed here anyway (Memory Bottleneck), so disabled mixed_precision (Test 2)
 
-2. Test 2
+2. **Test 2**
 
 >![image](https://user-images.githubusercontent.com/45917844/91637622-b8f59780-ea44-11ea-8721-9111b8d66aaf.png)
 
@@ -79,7 +79,7 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
     - Aborted at 5M steps.
   - The small punishment per every movement may have bad effect on learning. Tried one more test without any reward except actually getting the apple.
 
-3. Test 3
+3. **Test 3**
 
 >![image](https://user-images.githubusercontent.com/45917844/91637677-1984d480-ea45-11ea-830b-0dcdf52962d7.png)
 
@@ -97,10 +97,24 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 For fun, and to check if my current algorithm has some flaws, as current sanity test environment is too simple.
 
-- Bonus 1
+- **Bonus 1**
+
+>![image](https://user-images.githubusercontent.com/45917844/91637865-72a13800-ea46-11ea-9df8-d6be7aee07e7.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637870-792faf80-ea46-11ea-9bde-bce6a7297152.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637877-7e8cfa00-ea46-11ea-9a5a-055cec3c2b93.png)
+
   - The maxQ value stopped rising with agent not learning at all. This may due to the low learning rate.
 
-- Bonus 2
+- **Bonus 2**
+
+>![image](https://user-images.githubusercontent.com/45917844/91637885-88166200-ea46-11ea-8e44-41d64e6877ac.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637890-8ea4d980-ea46-11ea-8052-7c4ef0603520.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637896-96fd1480-ea46-11ea-96a3-aaed4fb9c74c.png)
+
   - Changed the learning rate to 0.01 start, decay to 0.001 for 500k steps.
   - after about 200k steps, it managed to get 500 reward flat (maximum reward)
 
