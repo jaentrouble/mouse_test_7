@@ -38,7 +38,7 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 >![image](https://user-images.githubusercontent.com/45917844/91637333-ae3a0300-ea42-11ea-967e-3436fa67f4ed.png)
 
-- Passed
+  - Passed
 
 2. Another Sanity check with shaped rewards (0.1 for getting close, -0.2 for getting farther away)
 
@@ -48,7 +48,7 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 >![image](https://user-images.githubusercontent.com/45917844/91637381-f35e3500-ea42-11ea-931d-08f632086ada.png)
 
-- Passed
+  - Passed
 
 ### Main test
 
@@ -58,6 +58,8 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 >![image](https://user-images.githubusercontent.com/45917844/91637542-3967c880-ea44-11ea-915b-64dcebce5cc1.png)
 
+>![image](https://user-images.githubusercontent.com/45917844/91637640-dfb3ce00-ea44-11ea-9e1f-a66b5cc931eb.png)
+
 >![image](https://user-images.githubusercontent.com/45917844/91637547-408ed680-ea44-11ea-9a3f-0026c8b38a63.png)
 
     - NaN error appeared
@@ -65,14 +67,31 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 2. Test 2
 
-    - After about 2.5M steps, Loss dropped rapidly and Q-value stopped changing.
-      - Aborted at 5M steps.
-    - The small punishment per every movement may have bad effect on learning. Tried one more test without any reward except actually getting the apple.
+>![image](https://user-images.githubusercontent.com/45917844/91637622-b8f59780-ea44-11ea-8721-9111b8d66aaf.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637625-c0b53c00-ea44-11ea-99ba-aad7507d99e3.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637631-c90d7700-ea44-11ea-9f95-26cd5c2cd8fc.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637635-d165b200-ea44-11ea-8cb8-4972a56a39c4.png)
+
+  - After about 2.5M steps, Loss dropped rapidly and Q-value stopped changing.
+    - Aborted at 5M steps.
+  - The small punishment per every movement may have bad effect on learning. Tried one more test without any reward except actually getting the apple.
 
 3. Test 3
 
-    - Again, after about 2.5M steps, Loss dropped rapidly and Q-value stopped changing.
-      - Aborted at about 8M steps.
+>![image](https://user-images.githubusercontent.com/45917844/91637677-1984d480-ea45-11ea-830b-0dcdf52962d7.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637682-243f6980-ea45-11ea-9b00-061333ae599d.png)
+ -*Note: Here, Reward = Score*
+
+>![image](https://user-images.githubusercontent.com/45917844/91637686-2bff0e00-ea45-11ea-88a6-7485925c1423.png)
+
+>![image](https://user-images.githubusercontent.com/45917844/91637689-34efdf80-ea45-11ea-98e9-e1df8e394b67.png)
+
+  - Again, after about 2.5M steps, Loss dropped rapidly and Q-value stopped changing.
+    - Aborted at about 8M steps.
 
 ### Bonus Test
 
