@@ -32,13 +32,13 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 1. Sanity check environment
 
-![image](https://user-images.githubusercontent.com/45917844/91637321-a0847d80-ea42-11ea-9e67-c8e2db18b65c.png)
+>![image](https://user-images.githubusercontent.com/45917844/91637321-a0847d80-ea42-11ea-9e67-c8e2db18b65c.png)
 
-![image](https://user-images.githubusercontent.com/45917844/91637325-a7ab8b80-ea42-11ea-8753-ee9c2005e48d.png)
+>![image](https://user-images.githubusercontent.com/45917844/91637325-a7ab8b80-ea42-11ea-8753-ee9c2005e48d.png)
 
-![image](https://user-images.githubusercontent.com/45917844/91637333-ae3a0300-ea42-11ea-967e-3436fa67f4ed.png)
+>![image](https://user-images.githubusercontent.com/45917844/91637333-ae3a0300-ea42-11ea-967e-3436fa67f4ed.png)
 
-    - Passed
+- Passed
 
 2. Another Sanity check with shaped rewards (0.1 for getting close, -0.2 for getting farther away)
 
@@ -48,7 +48,7 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 ![image](https://user-images.githubusercontent.com/45917844/91637381-f35e3500-ea42-11ea-931d-08f632086ada.png)
 
-    - Passed
+- Passed
 
 ### Main test
 
