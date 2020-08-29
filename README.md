@@ -58,11 +58,22 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 ### Bonus Test
 
+For fun, and to check if my current algorithm has some flaws, as current sanity test environment is too simple.
 
+- Bonus 1
+  - The maxQ value stopped rising with agent not learning at all. This may due to the low learning rate.
 
+- Bonus 2
+  - Changed the learning rate to 0.01 start, decay to 0.001 for 500k steps.
+  - after about 200k steps, it managed to get 500 reward flat (maximum reward)
 
 ## Diagnosis
 
-
+- Prioritized replay was not sufficient to learn the environment.
+- Interestingly, in both cases with -0.01 punishment per step and no punishment nor reward per step, maxQ suddenly stopped shaking after 2.5M steps.
+- The reward seems to be too sparse to learn. Will changing sparsity help learning?
+- As the Agent showed that it can learn classic gym environment (cartpole), instead of tweaking learning algorithm any farther, it is time to tweak the environment.
 
 ## TODO
+
+- Change sparsity of the reward. It can be either reducing the map size or increasing the number of apples.
