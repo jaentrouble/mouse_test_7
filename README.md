@@ -32,15 +32,33 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 
 1. Sanity check environment
 
+![image](https://user-images.githubusercontent.com/45917844/91637321-a0847d80-ea42-11ea-9e67-c8e2db18b65c.png)
+
+![image](https://user-images.githubusercontent.com/45917844/91637325-a7ab8b80-ea42-11ea-8753-ee9c2005e48d.png)
+
+![image](https://user-images.githubusercontent.com/45917844/91637333-ae3a0300-ea42-11ea-967e-3436fa67f4ed.png)
+
     - Passed
 
 2. Another Sanity check with shaped rewards (0.1 for getting close, -0.2 for getting farther away)
+
+![image](https://user-images.githubusercontent.com/45917844/91637370-e5a8af80-ea42-11ea-9117-26097712332c.png)
+
+![image](https://user-images.githubusercontent.com/45917844/91637376-eb9e9080-ea42-11ea-9ebe-1dca0a742509.png)
+
+![image](https://user-images.githubusercontent.com/45917844/91637381-f35e3500-ea42-11ea-931d-08f632086ada.png)
 
     - Passed
 
 ### Main test
 
 1. Test 1
+
+![image](https://user-images.githubusercontent.com/45917844/91637538-3076f700-ea44-11ea-8c01-bc6c1b75219a.png)
+
+![image](https://user-images.githubusercontent.com/45917844/91637542-3967c880-ea44-11ea-915b-64dcebce5cc1.png)
+
+![image](https://user-images.githubusercontent.com/45917844/91637547-408ed680-ea44-11ea-9a3f-0026c8b38a63.png)
 
     - NaN error appeared
       - Using mixed_precision does not enhance speed here anyway (Memory Bottleneck), so disabled mixed_precision (Test 2)
