@@ -84,6 +84,7 @@ Agent's neural network is not critical in terms of reinforcement learning. Even 
 >![image](https://user-images.githubusercontent.com/45917844/91637677-1984d480-ea45-11ea-830b-0dcdf52962d7.png)
 
 >![image](https://user-images.githubusercontent.com/45917844/91637682-243f6980-ea45-11ea-9b00-061333ae599d.png)
+
  -*Note: Here, Reward = Score*
 
 >![image](https://user-images.githubusercontent.com/45917844/91637686-2bff0e00-ea45-11ea-88a6-7485925c1423.png)
