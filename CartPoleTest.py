@@ -10,8 +10,8 @@ import sys
 
 ## Select Player
 from CartPoleAgent import Player
-hp.Learn_start = 500
-hp.Target_update = 1000
+hp.Learn_start = 1000
+hp.Target_update = 2000
 
 ENVIRONMENT = 'CartPole-v1'
 
