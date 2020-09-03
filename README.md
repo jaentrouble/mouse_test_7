@@ -116,7 +116,8 @@ For fun, and to check if my current algorithm has some flaws, as current sanity 
 
 >![image](https://user-images.githubusercontent.com/45917844/91637896-96fd1480-ea46-11ea-96a3-aaed4fb9c74c.png)
 
-  - Changed the learning rate to 0.01 start, decay to 0.001 for 500k steps.
+  - ~Changed the learning rate to 0.01 start, decay to 0.001 for 500k steps.~
+  -**Sep/03/20 Update : Learning rate modification was not applied. It was the exact same condition as Bonus 1**
   - after about 200k steps, it managed to get 500 reward flat (maximum reward)
 
 ## Diagnosis
